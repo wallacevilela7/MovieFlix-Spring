@@ -9,6 +9,7 @@ import tech.wvs.movieflix2.domain.Movie;
 import tech.wvs.movieflix2.domain.Streaming;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class MovieMapper {
 
@@ -54,7 +55,7 @@ public class MovieMapper {
                 .map(item -> {
                     return new CategoryResponse(item.getId(), item.getName());
                 })
-                .toList();
+                .collect(Collectors.toList());
 
         List<StreamingResponse> listStreamings = movie
                 .getStreamings()
@@ -62,7 +63,7 @@ public class MovieMapper {
                 .map(item -> {
                     return new StreamingResponse(item.getId(), item.getName());
                 })
-                .toList();
+                .collect(Collectors.toList());
 
         return new MovieResponse(
                 movie.getId(),
