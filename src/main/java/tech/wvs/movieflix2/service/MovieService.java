@@ -1,5 +1,7 @@
 package tech.wvs.movieflix2.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.orm.jpa.persistenceunit.PersistenceManagedTypes;
 import org.springframework.stereotype.Service;
 import tech.wvs.movieflix2.controller.dto.request.MovieRequest;
@@ -41,8 +43,12 @@ public class MovieService {
         return repository.save(entity);
     }
 
-    public List<Movie> findAll() {
-        return repository.findAll();
+    public Page<Movie> findAll(Integer page, Integer pageSize) {
+
+        //monta objeto de page
+        var pageRequest = PageRequest.of(page, pageSize);
+
+        return repository.findAll(pageRequest);
     }
 
     public Optional<Movie> findById(Long id) {

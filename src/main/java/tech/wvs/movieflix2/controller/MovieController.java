@@ -1,10 +1,13 @@
 package tech.wvs.movieflix2.controller;
 
+import org.hibernate.query.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tech.wvs.movieflix2.controller.dto.request.MovieRequest;
+import tech.wvs.movieflix2.controller.dto.response.ApiResponse;
 import tech.wvs.movieflix2.controller.dto.response.MovieResponse;
+import tech.wvs.movieflix2.controller.dto.response.PaginationResponse;
 import tech.wvs.movieflix2.mapper.MovieMapper;
 import tech.wvs.movieflix2.service.MovieService;
 
@@ -32,11 +35,22 @@ public class MovieController {
 
     //Find all
     @GetMapping
-    public ResponseEntity<List<MovieResponse>> getAll() {
-        return ResponseEntity.ok(service.findAll()
-                .stream()
-                .map(item -> MovieMapper.toResponse(item))
-                .toList());
+    public ResponseEntity<ApiResponse> getAll(@RequestParam(name = "page", defaultValue = "0") Integer page,
+                                              @RequestParam(name = "pageSize", defaultValue = "2") Integer pageSize) {
+
+        var response = service.findAll(page, pageSize);
+
+        return ResponseEntity.ok(new ApiResponse(
+                response.getContent()
+                        .stream()
+                        .map(MovieMapper::toResponse)
+                        .toList(),
+                new PaginationResponse(
+                        response.getNumber(),
+                        response.getSize(),
+                        response.getTotalElements(),
+                        response.getTotalPages())
+        ));
     }
 
     //Find by id
