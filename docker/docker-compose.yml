@@ -8,3 +8,19 @@ services:
       POSTGRES_DB: movieflix-database
     ports:
       - '5432:5432'
+    networks:
+      - movieflix-network
+
+  movieflix-spring-app:
+    image: wallacevilela/movieflix-spring:latest
+    container_name: movieflix-container
+    ports:
+      - '8080:8080'
+    depends_on:
+      - postgres
+    networks:
+      - movieflix-network
+
+networks:
+  movieflix-network:
+    driver: bridge
