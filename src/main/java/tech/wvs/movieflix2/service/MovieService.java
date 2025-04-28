@@ -126,4 +126,10 @@ public class MovieService {
             entity.setStreamings(streamings);
         }
     }
+
+    public List<Movie> findByCategory(Integer page, Integer pageSize, Long categoryId) {
+        //var pageRequest = PageRequest.of(page, pageSize);
+
+        return repository.findMovieByCategories(List.of(new Category(categoryId, "")));
+    }
 }

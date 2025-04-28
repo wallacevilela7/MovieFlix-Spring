@@ -1,6 +1,5 @@
 package tech.wvs.movieflix2.controller;
 
-import org.hibernate.query.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -81,6 +80,17 @@ public class MovieController {
 
         return deleted ?
                 ResponseEntity.noContent().build() :
+                ResponseEntity.notFound().build();
+    }
+
+    @GetMapping(path = "/category/{categoryId}")
+    public ResponseEntity<List<MovieResponse>> findByCategoryId(@RequestParam(name = "page", defaultValue = "0") Integer page,
+                                                                @RequestParam(name = "pageSize", defaultValue = "2") Integer pageSize,
+                                                                @PathVariable Long categoryId) {
+        var response = service.findByCategory(page, pageSize, categoryId);
+
+        return !response.isEmpty() ?
+                ResponseEntity.ok(response.stream().map(MovieMapper::toResponse).toList()) :
                 ResponseEntity.notFound().build();
     }
 }
